@@ -5,8 +5,10 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install -y python3 python3-pip curl unzip sudo
+RUN pip3 install --upgrade pip
 
-# Download components required by Graphcast.
+# Download components required by Graphcast. Libgeos-dev is required for graphcast to be able to be installed
+RUN sudo apt-get install -y libgeos-dev
 RUN pip3 install --upgrade https://github.com/deepmind/graphcast/archive/master.zip
 
 # Create dashboard directory.
@@ -17,7 +19,6 @@ WORKDIR /app
 COPY . .
 
 # Download necessary packages.
-RUN sudo apt-get install -y libgeos-dev
 RUN pip3 uninstall -y shapely
 RUN pip3 install -r requirements.txt
 RUN pip3 install shapely --no-binary shapely
